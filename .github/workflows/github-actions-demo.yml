@@ -24,8 +24,9 @@ jobs:
         run: apt-get update
       - name: Install docker-compose
         run: apt-get install -y docker-compose
-      - uses: isbang/compose-action@v1.5.1
-          with:
-            compose-file: "./docker-compose.yml"
-            services: count-service
+      - name: Start service with docker-compose
+        uses: isbang/compose-action@v1.5.1
+        with:
+          compose-file: "./docker-compose.yml"
+          services: count-service
       - run: echo "🍏 This job's status is ${{ job.status }}."
