@@ -23,7 +23,7 @@ jobs:
       - name: Update repos
         run: apt-get update
       - name: Install docker-compose
-        run: apt-get install -y docker-compose
+        run: apt-get install -y docker-client docker-compose
       - name: Start service with docker-compose
         uses: isbang/compose-action@v1.5.1
         with:
