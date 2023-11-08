@@ -1,0 +1,48 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is deploying from ${{ github.ref }} 🚀
+on: [push]
+jobs:
+  build:
+    runs-on: self-hosted
+    container:
+      image: ubuntu:23.04
+      volumes:
+        - /home/centos/actions-runner/_work:/home/centos/actions-runner/_work
+        - /var/run/docker.sock:/var/run/docker.sock
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: Add docker repo
+        run: |
+          # Add Docker's official GPG key:
+          apt-get update
+          apt-get install -y ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          chmod a+r /etc/apt/keyrings/docker.gpg
+
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+            tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+      - name: Install docker
+        run: apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      - name: Start service with docker-compose
+        run: docker compose up --build -d counter-service
+      - name: Verify deployment
+        run: |
+          sleep 5
+          state=$(docker compose ps --format '{{ .State }}' counter-service)
+          echo "Service state: $stat"
+          if [ "$state" != "running" ]; then exit 1; fi
+      - run: echo "🍏 This job's status is ${{ job.status }}."
