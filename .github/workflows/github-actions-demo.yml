@@ -42,7 +42,7 @@ jobs:
       - name: Verify deployment
         run: |
           sleep 5
-          state=$(docker compose ps --format '{{ .State }}'counter-service)
+          state=$(docker compose ps --format '{{ .State }}' counter-service)
           echo "Service state: $stat"
           if [ "$state" != "running" ]; then exit 1; fi
       - run: echo "🍏 This job's status is ${{ job.status }}."
