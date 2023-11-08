@@ -4,4 +4,4 @@ services:
   counter-service:
     image: busybox
     ports:
-      - 80:80
+      - 80:3000

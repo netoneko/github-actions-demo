@@ -1,8 +1,8 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is deploying from ${{ github.ref }} 🚀
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: self-hosted
     container:
       image: ubuntu:23.04
@@ -25,5 +25,5 @@ jobs:
       - name: Install docker-compose
         run: apt-get install -y docker-compose
       - name: Start service with docker-compose
-        run: docker-compose up counter-service
+        run: docker-compose up --build -d counter-service
       - run: echo "🍏 This job's status is ${{ job.status }}."
