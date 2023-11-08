@@ -25,5 +25,5 @@ jobs:
       - name: Install docker-compose
         run: apt-get install -y docker-compose
       - name: Start service with docker-compose
-        run: docker-compose up count-service
+        run: docker-compose up counter-service
       - run: echo "🍏 This job's status is ${{ job.status }}."
