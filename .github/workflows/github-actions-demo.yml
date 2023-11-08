@@ -20,16 +20,29 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - name: Update repos
-        run: apt-get update
-      - name: Install docker-compose
-        run: apt-get install -y docker-compose
+      - name: Add docker repo
+        run: |
+          # Add Docker's official GPG key:
+          apt-get update
+          apt-get install ca-certificates curl gnupg
+          install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          chmod a+r /etc/apt/keyrings/docker.gpg
+
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+            tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update
+      - name: Install docker
+        run: apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       - name: Start service with docker-compose
-        run: docker-compose up --build -d counter-service
+        run: docker compose up --build -d counter-service
       - name: Verify deployment
         run: |
           sleep 5
-          state=$(docker-compose ps counter-service --format '{{ .State }}')
+          state=$(docker compose ps --format '{{ .State }}'counter-service)
           echo "Service state: $stat"
           if [ "$state" != "running" ]; then exit 1; fi
       - run: echo "🍏 This job's status is ${{ job.status }}."
