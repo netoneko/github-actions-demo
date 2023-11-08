@@ -26,4 +26,10 @@ jobs:
         run: apt-get install -y docker-compose
       - name: Start service with docker-compose
         run: docker-compose up --build -d counter-service
+      - name: Verify deployment
+        run: |
+          sleep 5
+          state=$(docker-compose ps counter-service --format '{{ .State }}')
+          echo "Service state: $stat"
+          if [ "$state" != "running" ]; then exit 1; fi
       - run: echo "🍏 This job's status is ${{ job.status }}."
