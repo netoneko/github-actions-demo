@@ -2,6 +2,6 @@ version: "3.7"
 
 services:
   counter-service:
-    image: busybox
+    build: .
     ports:
       - 80:3000
