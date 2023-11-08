@@ -1,6 +1,6 @@
 FROM node:21-alpine
 
-ADD ./package.json /opt/counter-service
+ADD ./package.json /opt/counter-service/
 
 WORKDIR /opt/counter-service
 
