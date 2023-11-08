@@ -27,6 +27,6 @@ jobs:
       - name: Start service with docker-compose
         uses: isbang/compose-action@v1.5.1
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: "${{ github.workspace }}/docker-compose.yml"
           services: count-service
       - run: echo "🍏 This job's status is ${{ job.status }}."
