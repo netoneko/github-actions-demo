@@ -8,4 +8,4 @@ RUN npm install
 
 ADD . /opt/counter-service/
 
-RUN npm start
+CMD [ "npm", "start" ]
